@@ -3,12 +3,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const form = document.querySelector("form");
   const cedulaInput = document.getElementById("cedula");
   const horarioSelect = document.getElementById("horario");
-  const cuposInfo = document.getElementById("cupos-info"); // Contenedor donde se muestran los cupos
-  const mensajeBloqueo = document.getElementById("mensaje-bloqueo"); // Mensaje si se llena todo
+  const cuposInfo = document.getElementById("cupos-info");
+  const mensajeBloqueo = document.getElementById("mensaje-bloqueo");
 
-  const MAX_CUPOS = 64; // Máximo permitido por horario
+  const MAX_CUPOS = 64; // Cupos máximos por turno
 
-  // === 1️⃣ Obtener el conteo actual de cupos desde la función de Netlify ===
+  // === 1️⃣ Obtener el conteo actual de cupos ===
   async function actualizarCupos() {
     try {
       const res = await fetch("/.netlify/functions/get-cupos");
@@ -17,12 +17,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       let totalLlenos = 0;
       let infoHTML = "<h4>Cupos disponibles por horario:</h4><ul>";
 
-      horarioSelect.querySelectorAll("option").forEach(opt => {
+      horarioSelect.querySelectorAll("option").forEach((opt) => {
         const horario = opt.value;
+        if (!horario || horario.includes("Selecciona")) return;
+
         const inscritos = conteo[horario] || 0;
         const disponibles = MAX_CUPOS - inscritos;
-
-        if (horario === "" || horario.includes("Selecciona")) return; // evita línea vacía
 
         if (disponibles <= 0) {
           opt.disabled = true;
@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       infoHTML += "</ul>";
       cuposInfo.innerHTML = infoHTML;
 
-      // Si todos los horarios están llenos
       if (totalLlenos >= horarioSelect.options.length - 1) {
         form.style.display = "none";
         mensajeBloqueo.style.display = "block";
@@ -51,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // === 2️⃣ Validar si la cédula ya está registrada ===
+  // === 2️⃣ Verificar si una cédula ya está registrada ===
   async function verificarCedula(cedula) {
     try {
       const res = await fetch(`/.netlify/functions/check-cedula?cedula=${cedula}`);
@@ -63,9 +62,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // === 3️⃣ Manejar envío del formulario ===
+  // === 3️⃣ Actualizar cupos en Netlify ===
+  async function actualizarCupoBackend(horario) {
+    try {
+      const res = await fetch("/.netlify/functions/update-cupos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ horario }),
+      });
+      const data = await res.json();
+      console.log("Actualización de cupo:", data);
+    } catch (err) {
+      console.error("Error actualizando cupo:", err);
+    }
+  }
+
+  // === 4️⃣ Envío del formulario ===
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const cedula = cedulaInput.value.trim();
     const horario = horarioSelect.value;
 
@@ -89,12 +104,34 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!confirmar) return;
     }
 
-    // Si pasa las validaciones, enviar el formulario
+    // Verificar cupos disponibles antes de enviar
+    try {
+      const res = await fetch("/.netlify/functions/update-cupos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ horario }),
+      });
+      const cupoData = await res.json();
+
+      if (cupoData.error && cupoData.error.includes("No hay cupos")) {
+        alert("🚫 No hay cupos disponibles para este horario. Por favor elige otro.");
+        await actualizarCupos();
+        return;
+      }
+    } catch (err) {
+      console.error("Error verificando cupos:", err);
+      alert("Hubo un error verificando los cupos. Intenta nuevamente.");
+      return;
+    }
+
+    // Si pasa todas las validaciones, enviar formulario a Netlify Forms
     alert("✅ Registro enviado correctamente.");
     form.submit();
+
+    // Actualizar visualmente los cupos (sin esperar al reload)
+    await actualizarCupos();
   });
 
-  // === 4️⃣ Cargar la información inicial de cupos ===
+  // === 5️⃣ Cargar los cupos al inicio ===
   await actualizarCupos();
 });
-

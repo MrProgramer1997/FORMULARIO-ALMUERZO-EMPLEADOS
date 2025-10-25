@@ -6,9 +6,7 @@ export const handler = async (event) => {
   const SITE_ID = process.env.SITE_ID;
   const TOKEN = process.env.NETLIFY_AUTH_TOKEN;
 
-  // Tomar la cédula desde los parámetros de la URL (?cedula=12345)
   const cedula = event.queryStringParameters?.cedula;
-
   if (!cedula) {
     return {
       statusCode: 400,
@@ -17,47 +15,36 @@ export const handler = async (event) => {
   }
 
   try {
-    // Obtener todos los formularios del sitio
+    // Buscar el formulario correcto
     const formsRes = await fetch(`${NETLIFY_API}/sites/${SITE_ID}/forms`, {
       headers: { Authorization: `Bearer ${TOKEN}` },
     });
     const forms = await formsRes.json();
-    const form = forms.find((f) => f.name === "inscripcion-almuerzo");
-
+    const form = forms.find(f => f.name === "inscripcion-almuerzo");
     if (!form) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ error: "Formulario no encontrado" }),
-      };
+      return { statusCode: 404, body: JSON.stringify({ error: "Formulario no encontrado" }) };
     }
 
-    // Obtener todas las respuestas del formulario
+    // Traer los registros existentes
     const submissionsRes = await fetch(`${NETLIFY_API}/forms/${form.id}/submissions`, {
       headers: { Authorization: `Bearer ${TOKEN}` },
     });
     const submissions = await submissionsRes.json();
 
-    // Buscar si la cédula ya existe
-    const registros = submissions.filter(
-      (sub) => sub.data?.cedula?.toString().trim() === cedula.toString().trim()
-    );
-
-    let resultado = { existe: false };
-
-    if (registros.length > 0) {
-      resultado.existe = true;
-      resultado.totalRegistros = registros.length;
-      resultado.ultimoHorario = registros[registros.length - 1].data?.horario || null;
-    }
+    // Filtrar por cédula
+    const registros = submissions.filter(sub => sub.data?.cedula === cedula);
+    const totalRegistros = registros.length;
+    const ultimoHorario = totalRegistros > 0 ? registros[registros.length - 1].data?.horario : null;
 
     return {
       statusCode: 200,
-      body: JSON.stringify(resultado),
+      body: JSON.stringify({
+        existe: totalRegistros > 0,
+        totalRegistros,
+        ultimoHorario,
+      }),
     };
   } catch (err) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: err.message }),
-    };
+    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 };
