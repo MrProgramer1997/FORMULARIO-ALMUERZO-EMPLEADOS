@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const MAX_CUPOS = 64; // Máximo permitido por horario
 
-  // === 1. Obtener el conteo actual de cupos desde la función de Netlify ===
+  // === 1️⃣ Obtener el conteo actual de cupos desde la función de Netlify ===
   async function actualizarCupos() {
     try {
       const res = await fetch("/.netlify/functions/get-cupos");
@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const horario = opt.value;
         const inscritos = conteo[horario] || 0;
         const disponibles = MAX_CUPOS - inscritos;
+
+        if (horario === "" || horario.includes("Selecciona")) return; // evita línea vacía
 
         if (disponibles <= 0) {
           opt.disabled = true;
@@ -36,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       cuposInfo.innerHTML = infoHTML;
 
       // Si todos los horarios están llenos
-      if (totalLlenos === horarioSelect.options.length) {
+      if (totalLlenos >= horarioSelect.options.length - 1) {
         form.style.display = "none";
         mensajeBloqueo.style.display = "block";
       } else {
@@ -49,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // === 2. Validar si la cédula ya está registrada ===
+  // === 2️⃣ Validar si la cédula ya está registrada ===
   async function verificarCedula(cedula) {
     try {
       const res = await fetch(`/.netlify/functions/check-cedula?cedula=${cedula}`);
@@ -61,7 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // === 3. Manejar envío del formulario ===
+  // === 3️⃣ Manejar envío del formulario ===
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const cedula = cedulaInput.value.trim();
@@ -92,57 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     form.submit();
   });
 
-  // === 4. Cargar la información inicial de cupos ===
+  // === 4️⃣ Cargar la información inicial de cupos ===
   await actualizarCupos();
 });
 
-// netlify/functions/get-cupos.js
-import fetch from "node-fetch";
-
-export const handler = async () => {
-  const NETLIFY_API = "https://api.netlify.com/api/v1";
-  const SITE_ID = process.env.SITE_ID; // ID del sitio configurado en Netlify
-  const TOKEN = process.env.NETLIFY_AUTH_TOKEN; // Token personal configurado en Netlify
-
-  try {
-    // 1️⃣ Obtener todos los formularios del sitio
-    const formsRes = await fetch(`${NETLIFY_API}/sites/${SITE_ID}/forms`, {
-      headers: { Authorization: `Bearer ${TOKEN}` },
-    });
-    const forms = await formsRes.json();
-    const form = forms.find(f => f.name === "inscripcion-almuerzo");
-
-    if (!form) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ error: "Formulario no encontrado" }),
-      };
-    }
-
-    // 2️⃣ Obtener las respuestas (submissions)
-    const submissionsRes = await fetch(
-      `${NETLIFY_API}/forms/${form.id}/submissions`,
-      {
-        headers: { Authorization: `Bearer ${TOKEN}` },
-      }
-    );
-    const submissions = await submissionsRes.json();
-
-    // 3️⃣ Contar inscripciones por horario
-    const conteo = {};
-    submissions.forEach(sub => {
-      const horario = sub.data?.horario;
-      if (horario) conteo[horario] = (conteo[horario] || 0) + 1;
-    });
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(conteo),
-    };
-  } catch (err) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: err.message }),
-    };
-  }
-};
