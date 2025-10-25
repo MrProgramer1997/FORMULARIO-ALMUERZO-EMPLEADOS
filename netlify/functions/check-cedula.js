@@ -31,8 +31,8 @@ export const handler = async (event) => {
     });
     const submissions = await submissionsRes.json();
 
-    // Filtrar por cédula
-    const registros = submissions.filter(sub => sub.data?.cedula === cedula);
+    // Filtrar por cédula (normalizando)
+    const registros = submissions.filter(sub => sub.data?.cedula?.trim() === cedula.trim());
     const totalRegistros = registros.length;
     const ultimoHorario = totalRegistros > 0 ? registros[registros.length - 1].data?.horario : null;
 

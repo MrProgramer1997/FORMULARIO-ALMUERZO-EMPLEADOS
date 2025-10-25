@@ -3,7 +3,7 @@ import fetch from "node-fetch";
 
 export const handler = async () => {
   const NETLIFY_API = "https://api.netlify.com/api/v1";
-  const SITE_ID = process.env.MY_SITE_ID;
+  const SITE_ID = process.env.SITE_ID;
   const TOKEN = process.env.NETLIFY_AUTH_TOKEN;
 
   try {
@@ -24,11 +24,19 @@ export const handler = async () => {
     });
     const submissions = await submissionsRes.json();
 
-    // Contar por horario
+    // Contar por horario (normalizado)
     const conteo = {};
     submissions.forEach(sub => {
-      const horario = sub.data?.horario;
-      if (horario) conteo[horario] = (conteo[horario] || 0) + 1;
+      let horario = sub.data?.horario;
+      if (horario) {
+        horario = horario
+          .trim()
+          .toLowerCase()
+          .replace(/\s+/g, " ")
+          .replace(/\./g, "")
+          .replace(" ", " "); // elimina espacios invisibles
+        conteo[horario] = (conteo[horario] || 0) + 1;
+      }
     });
 
     return {
