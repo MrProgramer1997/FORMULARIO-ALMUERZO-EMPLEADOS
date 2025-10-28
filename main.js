@@ -3,65 +3,41 @@ document.addEventListener("DOMContentLoaded", async () => {
   const form = document.querySelector("form");
   const cedulaInput = document.getElementById("cedula");
   const horarioSelect = document.getElementById("horario");
-  const cuposInfo = document.getElementById("cupos-info");
   const mensajeBloqueo = document.getElementById("mensaje-bloqueo");
 
   const MAX_CUPOS = 64;
 
-  // Normaliza texto de horarios (para que coincida con los datos del backend)
-  const normalizarTexto = (texto) =>
-    texto
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, " ")
-      .replace(/\./g, "")
-      .replace(" ", " ");
-
-  // === 1️⃣ Obtener cupos desde la función de Netlify ===
+  // === 1️⃣ Obtener cupos actuales ===
   async function actualizarCupos() {
     try {
       const res = await fetch("/.netlify/functions/get-cupos");
       const conteo = await res.json();
 
       let totalLlenos = 0;
-      let infoHTML = "<h4>Cupos disponibles por horario:</h4><ul>";
 
-      horarioSelect.querySelectorAll("option").forEach((opt) => {
-        const horarioOriginal = opt.value;
-        if (!horarioOriginal || horarioOriginal.includes("Selecciona")) return;
-
-        const horario = normalizarTexto(horarioOriginal);
+      horarioSelect.querySelectorAll("option").forEach(opt => {
+        const horario = opt.value.trim();
+        if (!horario || opt.disabled) return;
         const inscritos = conteo[horario] || 0;
         const disponibles = MAX_CUPOS - inscritos;
 
         if (disponibles <= 0) {
           opt.disabled = true;
-          infoHTML += `<li><strong>${horarioOriginal}:</strong> Cupos llenos ❌</li>`;
+          opt.textContent = `${horario} (lleno)`;
           totalLlenos++;
-        } else {
-          opt.disabled = false;
-          infoHTML += `<li><strong>${horarioOriginal}:</strong> ${disponibles} cupos disponibles ✅</li>`;
         }
       });
-
-      infoHTML += "</ul>";
-      cuposInfo.innerHTML = infoHTML;
 
       if (totalLlenos >= horarioSelect.options.length - 1) {
         form.style.display = "none";
         mensajeBloqueo.style.display = "block";
-      } else {
-        form.style.display = "block";
-        mensajeBloqueo.style.display = "none";
       }
     } catch (err) {
       console.error("Error obteniendo cupos:", err);
-      cuposInfo.innerHTML =
-        "<p style='color:red;'>Error cargando los cupos disponibles.</p>";
     }
   }
 
-  // === 2️⃣ Verificar si la cédula ya está registrada ===
+  // === 2️⃣ Verificar si ya está inscrito ===
   async function verificarCedula(cedula) {
     try {
       const res = await fetch(`/.netlify/functions/check-cedula?cedula=${cedula}`);
@@ -73,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // === 3️⃣ Manejar envío del formulario ===
+  // === 3️⃣ Envío del formulario ===
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const cedula = cedulaInput.value.trim();
@@ -86,14 +62,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const data = await verificarCedula(cedula);
 
+    // ✅ Ahora SÍ se permite cambiar de turno sin límite
     if (data.existe) {
-      if (data.totalRegistros >= 2) {
-        alert(
-          "⚠️ Ya realizaste un cambio de horario. No puedes modificarlo más de una vez."
-        );
-        return;
-      }
-
       const confirmar = confirm(
         `Ya estás inscrito en el horario ${data.ultimoHorario}. ¿Deseas cambiarte al horario ${horario}?`
       );
@@ -104,6 +74,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     form.submit();
   });
 
-  // === 4️⃣ Cargar información inicial de cupos ===
   await actualizarCupos();
 });
