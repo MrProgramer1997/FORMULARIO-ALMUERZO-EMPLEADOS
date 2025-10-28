@@ -69,8 +69,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.preventDefault();
     const cedula = cedulaInput.value.trim();
     const horario = horarioSelect.value;
+    const proteina = document.getElementById("proteina").value;
 
-    if (!cedula || !horario) {
+    if (!cedula || !horario || !proteina) {
       alert("Por favor completa todos los campos.");
       return;
     }
