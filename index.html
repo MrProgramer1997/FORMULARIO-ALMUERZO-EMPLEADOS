@@ -2,280 +2,280 @@
 <html lang="es">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inscripción Almuerzo - Centro de Bienestar</title>
-  <style>
-    body {
-      font-family: "Poppins", sans-serif;
-      background-color: #f1f6f3;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inscripción Almuerzo - Centro de Bienestar</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #f1f6f3;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
 
-    .container {
-      max-width: 1100px;
-      margin: 40px auto;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 30px;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 20px;
-      box-sizing: border-box;
-    }
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
-    .info-card,
-    .form-card {
-      flex: 1 1 450px;
-      max-width: 500px;
-      background: #ffffff;
-      border-radius: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 30px;
-      box-sizing: border-box;
-    }
+        .info-card,
+        .form-card {
+            flex: 1 1 450px;
+            max-width: 500px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            box-sizing: border-box;
+        }
 
-    .info-card {
-      background: #eaf4ec;
-      border-left: 6px solid #0b6b2f;
-    }
+        .info-card {
+            background: #eaf4ec;
+            border-left: 6px solid #0b6b2f;
+        }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
 
-    .logo-circle {
-      background: #0b6b2f;
-      color: white;
-      font-weight: bold;
-      font-size: 18px;
-      padding: 18px;
-      border-radius: 50%;
-    }
+        .logo-circle {
+            background: #0b6b2f;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 18px;
+            border-radius: 50%;
+        }
 
-    .highlight {
-      display: inline-block;
-      background: #d5a13b;
-      color: white;
-      font-weight: 600;
-      padding: 4px 12px;
-      border-radius: 6px;
-      margin-top: 6px;
-    }
+        .highlight {
+            display: inline-block;
+            background: #d5a13b;
+            color: white;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 6px;
+            margin-top: 6px;
+        }
 
-    h1,
-    h2 {
-      color: #0b6b2f;
-      margin-bottom: 15px;
-    }
+        h1,
+        h2 {
+            color: #0b6b2f;
+            margin-bottom: 15px;
+        }
 
-    p {
-      line-height: 1.6;
-      font-size: 15px;
-    }
+        p {
+            line-height: 1.6;
+            font-size: 15px;
+        }
 
-    ul {
-      margin-top: 10px;
-      padding-left: 20px;
-      line-height: 1.6;
-      font-size: 15px;
-    }
+        ul {
+            margin-top: 10px;
+            padding-left: 20px;
+            line-height: 1.6;
+            font-size: 15px;
+        }
 
-    form {
-      width: 100%;
-      box-sizing: border-box;
-    }
+        form {
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-    .input-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
+        .input-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
 
-    .input-row input {
-      flex: 1 1 48%;
-      min-width: 200px;
-      box-sizing: border-box;
-    }
+        .input-row input {
+            flex: 1 1 48%;
+            min-width: 200px;
+            box-sizing: border-box;
+        }
 
-    input,
-    select {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 15px;
-      box-sizing: border-box;
-      transition: all 0.2s ease;
-    }
+        input,
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
 
-    input:focus,
-    select:focus {
-      outline: none;
-      border-color: #0b6b2f;
-      box-shadow: 0 0 0 3px rgba(11, 107, 47, 0.2);
-    }
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #0b6b2f;
+            box-shadow: 0 0 0 3px rgba(11, 107, 47, 0.2);
+        }
 
-    label {
-      display: block;
-      font-weight: 600;
-      margin-top: 15px;
-      margin-bottom: 5px;
-      color: #0b6b2f;
-    }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: #0b6b2f;
+        }
 
-    button {
-      background: #0b6b2f;
-      color: white;
-      font-size: 16px;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
-      padding: 12px;
-      width: 100%;
-      margin-top: 20px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
+        button {
+            background: #0b6b2f;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
 
-    button:hover {
-      background: #095626;
-    }
+        button:hover {
+            background: #095626;
+        }
 
-    small {
-      display: block;
-      color: #555;
-      margin-top: 10px;
-      font-size: 13px;
-    }
+        small {
+            display: block;
+            color: #555;
+            margin-top: 10px;
+            font-size: 13px;
+        }
 
-    #cupos-info {
-      margin-top: 15px;
-      font-size: 14px;
-      background: #f4f9f5;
-      padding: 10px;
-      border-radius: 8px;
-    }
+        #cupos-info {
+            margin-top: 15px;
+            font-size: 14px;
+            background: #f4f9f5;
+            padding: 10px;
+            border-radius: 8px;
+        }
 
-    #mensaje-bloqueo {
-      display: none;
-      color: red;
-      font-weight: bold;
-      margin-top: 20px;
-      font-size: 15px;
-      text-align: center;
-    }
+        #mensaje-bloqueo {
+            display: none;
+            color: red;
+            font-weight: bold;
+            margin-top: 20px;
+            font-size: 15px;
+            text-align: center;
+        }
 
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-        align-items: stretch;
-      }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: stretch;
+            }
 
-      .info-card,
-      .form-card {
-        max-width: 100%;
-      }
+            .info-card,
+            .form-card {
+                max-width: 100%;
+            }
 
-      .input-row input {
-        flex: 1 1 100%;
-      }
-    }
-  </style>
+            .input-row input {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-  <div class="container">
-    <!-- Tarjeta informativa -->
-    <div class="info-card">
-      <div class="logo">
-        <div class="logo-circle">CCP</div>
-        <div>
-          <h2>Corporación Club Campestre de Pereira</h2>
-          <span class="highlight">Almuerzo Inauguración - Centro de Bienestar</span>
-        </div>
-      </div>
-      <p><strong>Instrucciones:</strong> Completa el formulario con tu número de cédula, nombre, área y selecciona
-        tu horario preferido para almorzar. <strong>Disponibilidad: 64 puestos por turno.</strong></p>
-      <ul>
-        <li>Una inscripción por persona (verifique su cédula antes de enviar).</li>
-        <li>Los horarios se bloquean automáticamente cuando alcanzan 64 inscripciones.</li>
-        <li>Si todos los horarios aparecen llenos, comuníquese con Bienestar para lista de espera.</li>
-      </ul>
-    </div>
-
-    <!-- Formulario -->
-    <div class="form-card">
-      <h2>Inscripción Almuerzo</h2>
-      <p>Centro de Bienestar — Corporación Club Campestre de Pereira</p>
-
-      <form name="inscripcion-almuerzo" method="POST" data-netlify="true">
-        <input type="hidden" name="form-name" value="inscripcion-almuerzo">
-
-        <div class="input-row">
-          <div>
-            <label for="cedula">Número de cédula</label>
-            <input type="text" id="cedula" name="cedula" placeholder="Ej: 12345678" required />
-          </div>
-
-          <div>
-            <label for="nombre">Nombre completo</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Pérez" required />
-          </div>
+    <div class="container">
+        <!-- Tarjeta informativa -->
+        <div class="info-card">
+            <div class="logo">
+                <div class="logo-circle">CCP</div>
+                <div>
+                    <h2>Corporación Club Campestre de Pereira</h2>
+                    <span class="highlight">Almuerzo Inauguración - Centro de Bienestar</span>
+                </div>
+            </div>
+            <p><strong>Instrucciones:</strong> Completa el formulario con tu número de cédula, nombre, área y selecciona
+                tu horario preferido para almorzar. <strong>Disponibilidad: 64 puestos por turno.</strong></p>
+            <ul>
+                <li>Una inscripción por persona (verifique su cédula antes de enviar).</li>
+                <li>Los horarios se bloquean automáticamente cuando alcanzan 64 inscripciones.</li>
+                <li>Si todos los horarios aparecen llenos, comuníquese con Bienestar para lista de espera.</li>
+            </ul>
         </div>
 
-        <label for="area">Indica tu área</label>
-        <select id="area" name="area" required>
-          <option value="">Selecciona tu área</option>
-          <option>Administración</option>
-          <option>Alimentos y Bebidas Club</option>
-          <option>Alimentos y bebidas temporal listos</option>
-          <option>Campo-Taller</option>
-          <option>Deportes</option>
-          <option>Operaciones - Servicios generales</option>
-          <option>Eventos y servicios</option>
-          <option>Mantenimiento - Infraestructura</option>
-          <option>Concesiones de espacio</option>
-          <option>Prestadores de servicio</option>
-          <option>Seguridad privada</option>
-          <option>Fundación</option>
-        </select>
+        <!-- Formulario -->
+        <div class="form-card">
+            <h2>Inscripción Almuerzo</h2>
+            <p>Centro de Bienestar — Corporación Club Campestre de Pereira</p>
 
-        <!-- 🔹 Nuevo campo de proteína -->
-        <label for="proteina">Escoge tu proteína</label>
-        <select id="proteina" name="proteina" required>
-          <option value="">Selecciona una opción</option>
-          <option>Chicharrón</option>
-          <option>Carne molida</option>
-          <option>Pollo</option>
-        </select>
+            <form name="inscripcion-almuerzo" method="POST" data-netlify="true">
+                <input type="hidden" name="form-name" value="inscripcion-almuerzo">
 
-        <label for="horario">Selecciona tu mejor horario para almorzar</label>
-        <select id="horario" name="horario" required>
-          <option value="">Selecciona horario</option>
-          <option>11:30 a.m. a 12:00 p.m.</option>
-          <option>12:00 p.m. a 12:30 p.m.</option>
-          <option>12:30 p.m. a 1:00 p.m.</option>
-          <option disabled>1:00 p.m. a 1:30 p.m. (bloqueado)</option>
-          <option>1:30 p.m. a 2:00 p.m.</option>
-          <option>2:00 p.m. a 2:30 p.m.</option>
-        </select>
+                <div class="input-row">
+                    <div>
+                        <label for="cedula">Número de cédula</label>
+                        <input type="text" id="cedula" name="cedula" placeholder="Ej: 12345678" required />
+                    </div>
 
-        <p id="mensaje-bloqueo" style="display:none;">🚫 Todos los cupos están llenos. Contacte a Bienestar.</p>
+                    <div>
+                        <label for="nombre">Nombre completo</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Pérez" required />
+                    </div>
+                </div>
 
-        <button type="submit">Enviar inscripción</button>
-        <small>JV PROGRAMER</small>
-      </form>
+                <label for="area">Indica tu área</label>
+                <select id="area" name="area" required>
+                    <option value="">Selecciona tu área</option>
+                    <option>Administración</option>
+                    <option>Alimentos y Bebidas Club</option>
+                    <option>Alimentos y bebidas temporal listos</option>
+                    <option>Campo-Taller</option>
+                    <option>Deportes</option>
+                    <option>Operaciones - Servicios generales</option>
+                    <option>Eventos y servicios</option>
+                    <option>Mantenimiento - Infraestructura</option>
+                    <option>Concesiones de espacio</option>
+                    <option>Prestadores de servicio</option>
+                    <option>Seguridad privada</option>
+                    <option>Fundación</option>
+                </select>
+
+                <!-- 🔹 Nuevo campo de proteína -->
+                <label for="proteina">Escoge tu proteína</label>
+                <select id="proteina" name="proteina" required>
+                    <option value="">Selecciona una opción</option>
+                    <option>Chicharrón</option>
+                    <option>Carne molida</option>
+                    <option>Pollo</option>
+                </select>
+
+                <label for="horario">Selecciona tu mejor horario para almorzar</label>
+                <select id="horario" name="horario" required>
+                    <option value="">Selecciona horario</option>
+                    <option>11:30 a.m. a 12:00 p.m.</option>
+                    <option disabled>12:00 p.m. a 12:30 p.m. (bloqueado)</option>
+                    <option>12:30 p.m. a 1:00 p.m.</option>
+                    <option disabled>1:00 p.m. a 1:30 p.m. (bloqueado)</option>
+                    <option>1:30 p.m. a 2:00 p.m.</option>
+                    <option>2:00 p.m. a 2:30 p.m.</option>
+                </select>
+
+                <p id="mensaje-bloqueo" style="display:none;">🚫 Todos los cupos están llenos. Contacte a Bienestar.</p>
+
+                <button type="submit">Enviar inscripción</button>
+                <small>JV PROGRAMER</small>
+            </form>
+        </div>
     </div>
-  </div>
 
-  <script src="main.js"></script>
+    <script src="main.js"></script>
 </body>
 
 </html>
