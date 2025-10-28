@@ -13,7 +13,7 @@ export const handler = async (event) => {
   try {
     const { cedula, nombre, area, horario, proteina } = JSON.parse(event.body);
 
-    // 1️⃣ Buscar el formulario principal
+    // 1️⃣ Buscar el formulario
     const formsRes = await fetch(`${NETLIFY_API}/sites/${SITE_ID}/forms`, {
       headers: { Authorization: `Bearer ${TOKEN}` },
     });
@@ -23,24 +23,30 @@ export const handler = async (event) => {
       return { statusCode: 404, body: JSON.stringify({ error: "Formulario no encontrado" }) };
     }
 
-    // 2️⃣ Obtener todas las inscripciones existentes
+    // 2️⃣ Obtener TODAS las inscripciones
     const submissionsRes = await fetch(`${NETLIFY_API}/forms/${form.id}/submissions`, {
       headers: { Authorization: `Bearer ${TOKEN}` },
     });
     const submissions = await submissionsRes.json();
 
-    // 3️⃣ Buscar registros con la misma cédula
+    // 3️⃣ Filtrar por cédula
     const registros = submissions.filter(sub => sub.data?.cedula === cedula);
 
-    // 4️⃣ Si ya existe, eliminar el registro anterior
+    // 4️⃣ Eliminar TODOS los registros anteriores si existen
     for (const reg of registros) {
-      await fetch(`${NETLIFY_API}/submissions/${reg.id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${TOKEN}` },
-      });
+      try {
+        await fetch(`${NETLIFY_API}/submissions/${reg.id}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${TOKEN}` },
+        });
+        // Pequeña pausa de seguridad (200ms) para evitar límite de API
+        await new Promise(r => setTimeout(r, 200));
+      } catch (delErr) {
+        console.warn(`No se pudo eliminar registro ${reg.id}:`, delErr.message);
+      }
     }
 
-    // 5️⃣ Crear un nuevo registro con los datos actualizados
+    // 5️⃣ Crear el nuevo registro actualizado
     const nuevo = await fetch(`${NETLIFY_API}/forms/${form.id}/submissions`, {
       method: "POST",
       headers: {
@@ -62,6 +68,7 @@ export const handler = async (event) => {
         message: "Registro actualizado correctamente.",
         cedula,
         horario,
+        eliminados: registros.length,
       }),
     };
   } catch (err) {
