@@ -31,19 +31,21 @@ export const handler = async (event) => {
     });
     const submissions = await submissionsRes.json();
 
-    // Filtrar por cédula (normalizando)
-    const registros = submissions.filter(sub => sub.data?.cedula?.trim() === cedula.trim());
+    // Filtrar por cédula
+    const registros = submissions.filter(sub => sub.data?.cedula === cedula);
     const totalRegistros = registros.length;
-    const ultimoHorario = totalRegistros > 0 ? registros[registros.length - 1].data?.horario : null;
 
+    // 🔓 PERMITIR cambios de horario
+    // Ya no bloqueamos si la persona ya está inscrita
     return {
       statusCode: 200,
       body: JSON.stringify({
         existe: totalRegistros > 0,
+        puedeCambiar: true, // <-- se permite cambio de horario
         totalRegistros,
-        ultimoHorario,
       }),
     };
+
   } catch (err) {
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
